@@ -1,0 +1,133 @@
+<!DOCTYPE table SYSTEM "../table-config-1.1.dtd">
+<!-- sqlname逻辑表,用于生成对象   physicalName物理表,用于从数据中获取数据 -->
+<table sqlname="DC_BG_RISK_SCAN" physicalName="DC_BG_RISK_SCAN">
+    <!--  特殊字符说明  &lt;&gt;   <> -->
+    <operation name="insert" paramtype="object" remark="插入表:DC_BG_RISK_SCAN">
+        <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO DC_BG_RISK_SCAN(
+        ID
+        ,NAME
+        ,RISK
+        ,DETAIL
+        ,EDU_INFO
+        ,ID_CARD_NO
+        ,DETAIL_URL
+        ,GMT_CREATE
+        ,GMT_MODIFIED
+        )VALUES(
+        #{id,jdbcType=BIGINT}
+        , #{name,jdbcType=VARCHAR}
+        , #{risk,jdbcType=CHAR}
+        , #{detail,jdbcType=VARCHAR}
+        , #{eduInfo,jdbcType=VARCHAR}
+        , #{idCardNo,jdbcType=VARCHAR}
+        , #{detailUrl,jdbcType=VARCHAR}
+        , #{gmtCreate,jdbcType=TIMESTAMP}
+        , #{gmtModified,jdbcType=TIMESTAMP}
+        )
+    </operation>
+
+    <operation name="update" paramtype="object" remark="更新表:DC_BG_RISK_SCAN">
+        UPDATE DC_BG_RISK_SCAN
+        SET
+        ID              = #{id,jdbcType=BIGINT}
+        ,NAME            = #{name,jdbcType=VARCHAR}
+        ,RISK            = #{risk,jdbcType=CHAR}
+        ,DETAIL          = #{detail,jdbcType=VARCHAR}
+        ,EDU_INFO        = #{eduInfo,jdbcType=VARCHAR}
+        ,ID_CARD_NO      = #{idCardNo,jdbcType=VARCHAR}
+        ,DETAIL_URL      = #{detailUrl,jdbcType=VARCHAR}
+        ,GMT_CREATE      = #{gmtCreate,jdbcType=TIMESTAMP}
+        ,GMT_MODIFIED    = #{gmtModified,jdbcType=TIMESTAMP}
+        WHERE
+        ID              = #{id,jdbcType=BIGINT}
+    </operation>
+
+    <operation name="deleteByPrimary" multiplicity="one" remark="根据主键删除数据:DC_BG_RISK_SCAN">
+        DELETE FROM
+        DC_BG_RISK_SCAN
+        WHERE
+        ID = #{id,jdbcType=BIGINT}
+    </operation>
+
+    <operation name="getByPrimary" multiplicity="one"  remark="根据主键获取数据:DC_BG_RISK_SCAN">
+        SELECT *
+        FROM DC_BG_RISK_SCAN
+        WHERE
+        ID = #{id,jdbcType=BIGINT}
+    </operation>
+
+    <!--自定义resultMap-->
+    <resultmap name="myResultMap" type="MyResult">
+        <column name="name" javatype="String"/>
+        <column name="risk" javatype="String"/>
+        <column name="xxx" javatype="String"/>
+    </resultmap>
+
+    <!-- idCardNoXX 自定义参数,需要指定类型,可以通过 jdbcType 也可以通过 javaType -->
+    <operation name="getMyResultMap" resultmap="myResultMap" remark="自定义ResultMap">
+        select
+        name,risk,xxx
+        from
+        DC_BG_RISK_SCAN
+        where
+        id_card_no=#{idCardNo}
+        or
+        id_card_no=#{idCardNoXX,jdbcType=VARCHAR}
+        limit 1
+    </operation>
+
+    <!-- idCardNoXX 自定义参数,需要指定类型,可以通过 jdbcType 也可以通过 javaType -->
+    <operation name="getListParams" resultmap="myResultMap" remark="foreach支持">
+        select
+        name,risk
+        from
+        DC_BG_RISK_SCAN
+        where
+        id_card_no=#{idCardNo}
+        and
+        name in
+        <foreach collection="names" item="name" index="index" open="(" close=")" separator=",">
+            #{name,jdbcType=VARCHAR}
+        </foreach>
+        limit 1
+    </operation>
+
+    <!-- idCardNoXX 自定义参数,需要指定类型,可以通过 jdbcType 也可以通过 javaType -->
+    <operation name="getListParamsMany" multiplicity="many" resultmap="myResultMap" remark="foreach支持 many">
+        select
+        name,risk
+        from
+        DC_BG_RISK_SCAN
+        where
+        id_card_no=#{idCardNo}
+        and
+        name in
+        <foreach collection="names" item="name" index="index" open="(" close=")" separator=",">
+            #{name,jdbcType=VARCHAR}
+        </foreach>
+    </operation>
+
+    <!-- idCardNoXX 自定义参数,需要指定类型,可以通过 jdbcType 也可以通过 javaType -->
+    <operation name="getListParamsPage" multiplicity="paging" paging="QueryRisk" resultmap="myResultMap" remark="foreach支持 many">
+        select
+        name,risk
+        from
+        DC_BG_RISK_SCAN
+        where
+        id_card_no=#{idCardNo}
+        and
+        name in
+        <foreach collection="names" item="name" index="index" open="(" close=")" separator=",">
+            #{name,jdbcType=VARCHAR}
+        </foreach>
+        order by gmt_modified desc
+    </operation>
+
+    <operation name="selectByXX" multiplicity="paging" paging="QueryRisk" remark="根据ID获取数据">
+        select * from DC_BG_RISK_SCAN where id=#{id}
+    </operation>
+</table>

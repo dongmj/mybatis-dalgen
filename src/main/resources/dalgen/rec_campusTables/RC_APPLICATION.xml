@@ -1,0 +1,102 @@
+<!DOCTYPE table SYSTEM "../config/table-config-1.0.dtd">
+<table sqlname="RC_APPLICATION" physicalName="RC_APPLICATION" remark="RC_APPLICATION">
+    <!--  特殊字符说明  &lt;&gt;   <> -->
+
+
+    <operation name="getByPrimary" multiplicity="one" remark="根据主键获取数据:RC_APPLICATION">
+        SELECT *
+        FROM RC_APPLICATION
+        WHERE
+        ID = #{id,jdbcType=BIGINT}
+    </operation>
+
+    <resultmap name="OceanResultMap" type="OceanResult">
+        <column name="name" javatype="String" jdbctype="VARCHAR" remark="中文"/>
+        <column name="degree" javatype="String" jdbctype="VARCHAR" remark="中文"/>
+        <column name="hope_work_places" javatype="String" jdbctype="VARCHAR" remark="中文"/>
+        <column name="channel_category_id" javatype="Long" jdbctype="BIGINT" remark="中文"/>
+        <column name="batch_id" javatype="Long" jdbctype="BIGINT" remark="中文"/>
+        <column name="posting_time" javatype="java.util.Date" jdbctype="TIMESTAMP" remark="中文"/>
+        <column name="last_operate_time" javatype="java.util.Date" jdbctype="TIMESTAMP" remark="中文"/>
+        <column name="school" javatype="String" jdbctype="VARCHAR" remark="中文"/>
+        <column name="major" javatype="java.util.HashMap" jdbctype="VARCHAR" remark="中文"/>
+    </resultmap>
+
+
+    <operation name="selectPositionIdForOcan" multiplicity="many" resulttype="Long">
+        select * from rc_position
+
+    </operation>
+
+    <operation name="selectForOcan" multiplicity="paging" paging="OceanQuery" resultmap="OceanResultMap" remark="公海池老数据">
+
+        SELECT
+        resume.name,
+        resume.degree,
+        app_ext.hope_work_places,
+        resume.channel_category_id,
+        app_ext.batch_id,
+        app.posting_time,
+        app.last_operate_time,
+        resume.school,
+        resume.major
+        FROM
+        rc_application app
+        LEFT JOIN
+        cp_application_ext app_ext
+        ON
+        app.id=app_ext.application_id
+        LEFT JOIN
+        dc_tal_resume resume
+        ON
+        app.resume_id=resume.id
+        WHERE
+        app.is_deleted = 'N'
+        and
+        resume.is_deleted = 'N'
+        and
+        app_ext.bu_id = 8
+        and
+        app.is_end='N'
+        <if test="batchId != null">
+            AND app_ext.batch_id = #{batchId,jdbcType=BIGINT}
+        </if>
+
+        <if test="applicationIds != null and !applicationIds.isEmpty()">
+            and app.id in
+            <foreach item="item" index="index" collection="applicationIds" open="(" separator="," close=")">
+                #{item,jdbcType=BIGINT}
+            </foreach>
+        </if>
+
+        <if test="name != null">
+            and resume.name like CONCAT('%', #{name,jdbcType=VARCHAR},'%')
+        </if>
+
+        <if test="mobile != null">
+            and resume.mobile = #{mobile,jdbcType=VARCHAR}
+        </if>
+
+        <if test="positionIds != null and !positionIds.isEmpty()">
+            and app.position_id in
+            <foreach item="item" index="index" collection="positionIds" open="(" separator="," close=")">
+                #{item ,jdbcType=BIGINT}
+            </foreach>
+        </if>
+
+        <if test="hopeWorkPlaces != null">
+            and app_ext.hope_work_places like CONCAT('%', #{hopeWorkPlaces,jdbcType=VARCHAR},'%')
+        </if>
+
+        <if test="school != null">
+            and resume.school like CONCAT('%', #{school,jdbcType=VARCHAR},'%')
+        </if>
+
+        <if test="major != null">
+            and resume.major like CONCAT('%',#{major,jdbcType=VARCHAR},'%')
+        </if>
+
+
+    </operation>
+
+</table>

@@ -1,0 +1,87 @@
+<!DOCTYPE table SYSTEM "../config/table-config-1.0.dtd">
+<table sqlname="FP_OAC_AST_ATTR" physicalName="FP_OAC_AST_ATTR_000" remark="资产属性">
+    <!--  特殊字符说明  &lt;&gt;   <> -->
+
+    <operation name="insert" paramtype="object" remark="插入表:FP_OAC_AST_ATTR">
+        <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO FP_OAC_AST_ATTR(
+            ST
+            ,CC_NO
+            ,AST_CL
+            ,BEG_DT
+            ,CST_ID
+            ,END_DT
+            ,TERMS
+            ,BILL_NO
+            ,PD_CODE
+            ,TERM_NO
+            ,CREATOR
+            ,DSTR_ORG
+            ,ODUE_DYS
+            ,MODIFIER
+            ,GMT_CREATE
+            ,GMT_MODIFIED
+        )VALUES(
+             ?
+            , #{ccNo,jdbcType=VARCHAR}
+            , #{astCl,jdbcType=INT}
+            , #{begDt,jdbcType=TIMESTAMP}
+            , #{cstId,jdbcType=VARCHAR}
+            , #{endDt,jdbcType=TIMESTAMP}
+            , #{terms,jdbcType=INT}
+            , #{billNo,jdbcType=VARCHAR}
+            , #{pdCode,jdbcType=VARCHAR}
+            , ?
+            , #{creator,jdbcType=VARCHAR}
+            , #{dstrOrg,jdbcType=VARCHAR}
+            , #{odueDys,jdbcType=INT}
+            , #{modifier,jdbcType=VARCHAR}
+            , #{gmtCreate,jdbcType=TIMESTAMP}
+            ,?
+        )
+    </operation>
+
+    <operation name="update" paramtype="object" remark="更新表:FP_OAC_AST_ATTR">
+        UPDATE FP_OAC_AST_ATTR
+        SET
+            ST              = #{st,jdbcType=VARCHAR}
+            ,CC_NO           = #{ccNo,jdbcType=VARCHAR}
+            ,AST_CL          = #{astCl,jdbcType=INT}
+            ,BEG_DT          = #{begDt,jdbcType=TIMESTAMP}
+            ,CST_ID          = #{cstId,jdbcType=VARCHAR}
+            ,END_DT          = #{endDt,jdbcType=TIMESTAMP}
+            ,TERMS           = #{terms,jdbcType=INT}
+            ,BILL_NO         = ?
+            ,PD_CODE         = #{pdCode,jdbcType=VARCHAR}
+            ,TERM_NO         = ?
+            ,CREATOR         = #{creator,jdbcType=VARCHAR}
+            ,DSTR_ORG        = #{dstrOrg,jdbcType=VARCHAR}
+            ,ODUE_DYS        = #{odueDys,jdbcType=INT}
+            ,MODIFIER        = #{modifier,jdbcType=VARCHAR}
+            ,GMT_CREATE      = #{gmtCreate,jdbcType=TIMESTAMP}
+            ,GMT_MODIFIED    = #{gmtModified,jdbcType=TIMESTAMP}
+        WHERE
+            BILL_NO         = ?
+            AND TERM_NO         = ?
+    </operation>
+
+    <operation name="deleteByPrimaryKey" multiplicity="one" remark="根据主键删除数据:FP_OAC_AST_ATTR">
+        DELETE FROM
+            FP_OAC_AST_ATTR
+        WHERE
+            BILL_NO = #{billNo,jdbcType=VARCHAR}
+            AND TERM_NO = #{termNo,jdbcType=INT}
+    </operation>
+
+    <operation name="getByPrimaryKey" multiplicity="one" remark="根据主键获取数据:FP_OAC_AST_ATTR">
+        SELECT *
+        FROM FP_OAC_AST_ATTR
+        WHERE
+            BILL_NO = #{billNo,jdbcType=VARCHAR}
+            AND TERM_NO = #{termNo,jdbcType=INT}
+            AND AST_CL=?
+    </operation>
+</table>
